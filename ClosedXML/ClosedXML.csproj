@@ -37,7 +37,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Optimize>true</Optimize>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>TRACE;_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
   </PropertyGroup>
