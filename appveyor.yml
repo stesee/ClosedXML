@@ -43,7 +43,6 @@ deploy:
     server: https://int.nugettest.org/api/v2/package
     api_key:
       secure: FtYufs+hLiTyKdRinhQyaOachdxSoErxy0lqcBJg6o/NGpt4L6b2CBdP2HFuIocW
-    skip_symbols: false
     artifact: /.*(\.|\.s)nupkg/
     on:
       branch: GithubAppveyorNugetOrgSession1
