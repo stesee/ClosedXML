@@ -37,8 +37,6 @@ namespace ClosedXML.Tests
         /// <returns></returns>
         public static Stream ArrayToStreamAppend(byte[] pBynaryArray, Stream pStream)
         {
-            #region Check params
-
             if (ReferenceEquals(pBynaryArray, null))
             {
                 throw new ArgumentNullException("pBynaryArray");
@@ -51,8 +49,6 @@ namespace ClosedXML.Tests
             {
                 throw new ArgumentException("Can't write to stream", "pStream");
             }
-
-            #endregion Check params
 
             foreach (byte b in pBynaryArray)
             {
@@ -68,8 +64,6 @@ namespace ClosedXML.Tests
 
         public static void StreamToStreamAppend(Stream streamIn, Stream streamToWrite, long dataLength)
         {
-            #region Check params
-
             if (ReferenceEquals(streamIn, null))
             {
                 throw new ArgumentNullException("streamIn");
@@ -86,8 +80,6 @@ namespace ClosedXML.Tests
             {
                 throw new ArgumentException("Can't write to stream", "streamToWrite");
             }
-
-            #endregion Check params
 
             var buf = new byte[512];
             long length;
@@ -117,8 +109,6 @@ namespace ClosedXML.Tests
         /// <returns></returns>
         public static bool Compare(Tuple<Uri, Stream> tuple1, Tuple<Uri, Stream> tuple2, bool stripColumnWidths)
         {
-            #region Check
-
             if (tuple1 == null || tuple1.Item1 == null || tuple1.Item2 == null)
             {
                 throw new ArgumentNullException("one");
@@ -135,8 +125,6 @@ namespace ClosedXML.Tests
             {
                 throw new ArgumentException("Must be in position 0", "other");
             }
-
-            #endregion Check
 
             var stringOne = new StreamReader(tuple1.Item2).ReadToEnd().RemoveIgnoredParts(tuple1.Item1, stripColumnWidths, ignoreGuids: true);
             var stringOther = new StreamReader(tuple2.Item2).ReadToEnd().RemoveIgnoredParts(tuple2.Item1, stripColumnWidths, ignoreGuids: true);
@@ -158,7 +146,6 @@ namespace ClosedXML.Tests
                 s = RemoveGuids(s);
 
             return RemoveNonCodingXmlFormatDiff(s);
-
         }
 
         private static string RemoveNonCodingXmlFormatDiff(string s)

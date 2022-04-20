@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using System.Net.Mime;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -356,7 +357,7 @@ namespace ClosedXML.Tests
                     leftMemoryStream.Seek(0, SeekOrigin.Begin);
                     rightMemoryStream.Seek(0, SeekOrigin.Begin);
 
-                    bool stripColumnWidthsFromSheet = TestHelper.StripColumnWidths &&
+                    bool stripColumnWidthsFromSheet = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
                         leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
                         rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
 
@@ -408,12 +409,8 @@ namespace ClosedXML.Tests
             return message.Length == 0;
         }
 
-        #region Nested type: PackagePartDescriptor
-
         public sealed class PackagePartDescriptor
         {
-            #region Private fields
-
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly CompressionOption _compressOption;
 
@@ -422,8 +419,6 @@ namespace ClosedXML.Tests
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly Uri _uri;
-
-            #endregion Private fields
 
             #region Constructor
 
@@ -486,8 +481,6 @@ namespace ClosedXML.Tests
 
             #endregion Public methods
         }
-
-        #endregion Nested type: PackagePartDescriptor
 
         #region Nested type: CompareStatus
 
