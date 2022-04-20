@@ -38,9 +38,7 @@ namespace ClosedXML.Tests
             workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
         }
 
-        // Because different fonts are installed on Unix,
-        // the columns widths after AdjustToContents() will
-        // cause the tests to fail.
+        // Because different fonts are installed on Unix, the columns widths after AdjustToContents() will cause the tests to fail.
         // Therefore we ignore the width attribute when running on Unix
         public static bool StripColumnWidths
         { get { return IsRunningOnUnix; } }
