@@ -131,7 +131,7 @@ namespace ClosedXML.Tests
             return stringOne == stringOther;
         }
 
-        private static string RemoveIgnoredParts(this string s, Uri uri, Boolean ignoreColumnWidths, Boolean ignoreGuids)
+        private static string RemoveIgnoredParts(this string s, Uri uri, Boolean ignoreColumnFormat, Boolean ignoreGuids)
         {
             foreach (var pair in uriSpecificIgnores.Where(p => p.Key.Equals(uri.OriginalString)))
                 s = pair.Value.Replace(s, "");
@@ -139,8 +139,8 @@ namespace ClosedXML.Tests
             // Collapse empty xml elements
             s = emptyXmlElementRegex.Replace(s, "<$1 />");
 
-            if (ignoreColumnWidths)
-                s = RemoveColumnWidths(s);
+            if (ignoreColumnFormat)
+                s = RemoveColumnFormatSection(s);
 
             if (ignoreGuids)
                 s = RemoveGuids(s);
@@ -184,18 +184,16 @@ namespace ClosedXML.Tests
         };
 
         private static readonly Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
-        private static readonly Regex columnRegex = new Regex("<x:col.*?width=\"\\d+(\\.\\d+)?\".*?\\/>", RegexOptions.Compiled);
-        private static readonly Regex widthRegex = new Regex("width=\"\\d+(\\.\\d+)?\"\\s+", RegexOptions.Compiled);
+        private static readonly Regex columnRegex = new Regex("(<x:col .*?width=\"\\d+\\.\\d+?\".*?\\/>)", RegexOptions.Compiled);
 
-        private static String RemoveColumnWidths(String s)
+        private static String RemoveColumnFormatSection(String s)
         {
             var replacements = new Dictionary<String, String>();
 
             foreach (var m in columnRegex.Matches(s).OfType<Match>())
             {
                 var original = m.Groups[0].Value;
-                var replacement = widthRegex.Replace(original, "");
-                replacements.Add(original, replacement);
+                replacements.Add(original, String.Empty);
             }
 
             foreach (var r in replacements)

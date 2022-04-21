@@ -5,7 +5,6 @@ using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using System.Net.Mime;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -276,7 +275,7 @@ namespace ClosedXML.Tests
         /// <returns></returns>
         public static bool Compare(Package left, Package right, bool compareToFirstDifference, out string message)
         {
-            return Compare(left, right, compareToFirstDifference, null, out message);
+            return Compare(left, right, compareToFirstDifference, null, out message, false);
         }
 
         /// <summary>
@@ -289,7 +288,7 @@ namespace ClosedXML.Tests
         /// <param name="message"></param>
         /// <returns></returns>
         public static bool Compare(Package left, Package right, bool compareToFirstDifference,
-            Func<Uri, bool> excludeMethod, out string message)
+            Func<Uri, bool> excludeMethod, out string message, bool ignoreColumnFormat)
         {
             #region Check
 
@@ -357,7 +356,7 @@ namespace ClosedXML.Tests
                     leftMemoryStream.Seek(0, SeekOrigin.Begin);
                     rightMemoryStream.Seek(0, SeekOrigin.Begin);
 
-                    bool stripColumnWidthsFromSheet = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
+                    bool stripColumnWidthsFromSheet = ignoreColumnFormat &&
                         leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
                         rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
 
@@ -420,8 +419,6 @@ namespace ClosedXML.Tests
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly Uri _uri;
 
-            #region Constructor
-
             /// <summary>
             ///     Instance constructor
             /// </summary>
@@ -430,8 +427,6 @@ namespace ClosedXML.Tests
             /// <param name="compressOption"></param>
             public PackagePartDescriptor(Uri uri, string contentType, CompressionOption compressOption)
             {
-                #region Check
-
                 if (ReferenceEquals(uri, null))
                 {
                     throw new ArgumentNullException("uri");
@@ -441,16 +436,10 @@ namespace ClosedXML.Tests
                     throw new ArgumentNullException("contentType");
                 }
 
-                #endregion Check
-
                 _uri = uri;
                 _contentType = contentType;
                 _compressOption = compressOption;
             }
-
-            #endregion Constructor
-
-            #region Public properties
 
             public Uri Uri
             {
@@ -470,16 +459,10 @@ namespace ClosedXML.Tests
                 get { return _compressOption; }
             }
 
-            #endregion Public properties
-
-            #region Public methods
-
             public override string ToString()
             {
                 return string.Format("Uri:{0} ContentType: {1}, Compression: {2}", _uri, _contentType, _compressOption);
             }
-
-            #endregion Public methods
         }
 
         #region Nested type: CompareStatus
@@ -494,31 +477,19 @@ namespace ClosedXML.Tests
 
         #endregion Nested type: CompareStatus
 
-        #region Nested type: PartPair
-
         private sealed class PartPair
         {
-            #region Private fields
-
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private readonly Uri _uri;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private CompareStatus _status;
 
-            #endregion Private fields
-
-            #region Constructor
-
             public PartPair(Uri uri, CompareStatus status)
             {
                 _uri = uri;
                 _status = status;
             }
-
-            #endregion Constructor
-
-            #region Public properties
 
             public Uri Uri
             {
@@ -533,11 +504,7 @@ namespace ClosedXML.Tests
                 [DebuggerStepThrough]
                 set { _status = value; }
             }
-
-            #endregion Public properties
         }
-
-        #endregion Nested type: PartPair
 
         //--
     }
