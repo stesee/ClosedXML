@@ -10,7 +10,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void InsertingTables()
         {
-            TestHelper.RunTestExample<InsertingTables>(@"Tables\InsertingTables.xlsx", false, null, true);
+            TestHelper.RunTestExample<InsertingTables>(@"Tables\InsertingTables.xlsx", false, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
