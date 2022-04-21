@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace ClosedXML.Tests
@@ -150,30 +152,43 @@ namespace ClosedXML.Tests
 
         private static string RemoveNonCodingXmlFormatDiff(string s)
         {
+            var currentUserCulture = Thread.CurrentThread.CurrentCulture;
+            var currentUserUiCulture = Thread.CurrentThread.CurrentUICulture;
             try
             {
-                var original = XDocument.Parse(s);
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
-                var normalized = new XDocument(original);
-
-                return normalized.ToString();
-            }
-            catch (System.Xml.XmlException ex)
-            {
-                if (ex.Message.Contains("Data at the root level is invalid."))
+                try
                 {
-                    return s;
-                }
+                    var original = XDocument.Parse(s);
 
-                if (ex.Message.Contains("hexadecimal value 0x00, is an invalid character."))
-                {
-                    return s;
+                    var normalized = new XDocument(original);
+
+                    return normalized.ToString();
                 }
-                throw;
+                catch (System.Xml.XmlException ex)
+                {
+                    if (ex.Message.Contains("Data at the root level is invalid."))
+                    {
+                        return s;
+                    }
+
+                    if (ex.Message.Contains("hexadecimal value 0x00, is an invalid character."))
+                    {
+                        return s;
+                    }
+                    throw;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
-            catch (Exception)
+            finally
             {
-                throw;
+                Thread.CurrentThread.CurrentCulture = currentUserCulture;
+                Thread.CurrentThread.CurrentUICulture = currentUserUiCulture;
             }
         }
 
@@ -184,7 +199,7 @@ namespace ClosedXML.Tests
         };
 
         private static readonly Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
-        private static readonly Regex columnRegex = new Regex("(<x:col .*?width=\"\\d+\\.\\d+?\".*?\\/>)", RegexOptions.Compiled);
+        private static readonly Regex columnRegex = new Regex("(<x:col .*?/>)", RegexOptions.Compiled);
 
         private static String RemoveColumnFormatSection(String s)
         {

@@ -16,7 +16,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void ResizingTables()
         {
-            TestHelper.RunTestExample<ResizingTables>(@"Tables\ResizingTables.xlsx", ignoreColumnFormats: true);
+            TestHelper.RunTestExample<ResizingTables>(@"Tables\ResizingTables.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
