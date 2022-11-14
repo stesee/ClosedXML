@@ -1,4 +1,6 @@
-# ClosedXML
+# Development of upcoming releases got moved to <https://github.com/rubicon-oss/DocumentPartner.ClosedXML>
+
+## ClosedXML
 
 [![.NET build and test](https://github.com/stesee/ClosedXML/actions/workflows/dotnet.yml/badge.svg)](https://github.com/stesee/ClosedXML/actions/workflows/dotnet.yml) [![NuGet Badge](https://buildstats.info/nuget/DocumentPartner.ClosedXML)](https://www.nuget.org/packages/DocumentPartner.ClosedXML/)
 
